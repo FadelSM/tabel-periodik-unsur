@@ -1,675 +1,375 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FadelSM TempMail</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #202124;
-            color: #e8eaed;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 40px;
-            animation: slideDown 0.5s ease;
-        }
-
-        .logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo svg {
-            width: 28px;
-            height: 28px;
-            fill: white;
-        }
-
-        h1 {
-            font-size: 28px;
-            font-weight: 500;
-            color: #fff;
-        }
-
-        .welcome-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 60vh;
-            text-align: center;
-            animation: fadeIn 0.6s ease;
-        }
-
-        .welcome-icon {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: #292a2d;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
-
-        .welcome-icon svg {
-            width: 50px;
-            height: 50px;
-            fill: #667eea;
-        }
-
-        .welcome-screen h2 {
-            font-size: 32px;
-            font-weight: 500;
-            margin-bottom: 12px;
-        }
-
-        .welcome-screen p {
-            color: #9aa0a6;
-            font-size: 16px;
-            max-width: 500px;
-            margin-bottom: 32px;
-        }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .btn-primary:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .main-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .main-content.active {
-            display: grid;
-            grid-template-columns: 400px 1fr;
-            gap: 24px;
-        }
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .card {
-            background: #292a2d;
-            border: 1px solid #3c4043;
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .email-display {
-            animation: slideUp 0.5s ease;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .card-title {
-            font-size: 13px;
-            color: #9aa0a6;
-            font-weight: 400;
-        }
-
-        .icon-btn {
-            background: none;
-            border: none;
-            color: #667eea;
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .icon-btn:hover {
-            background: rgba(102, 126, 234, 0.1);
-        }
-
-        .icon-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .icon-btn svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        .email-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: #202124;
-            padding: 14px;
-            border-radius: 8px;
-        }
-
-        .email-text {
-            flex: 1;
-            font-size: 14px;
-            word-break: break-all;
-            color: #e8eaed;
-        }
-
-        .inbox-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid #3c4043;
-        }
-
-        .inbox-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
-
-        .inbox-title svg {
-            width: 20px;
-            height: 20px;
-            fill: #9aa0a6;
-        }
-
-        .count {
-            color: #9aa0a6;
-            font-size: 14px;
-            font-weight: 400;
-        }
-
-        .message-list {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .message-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .message-list::-webkit-scrollbar-track {
-            background: #202124;
-        }
-
-        .message-list::-webkit-scrollbar-thumb {
-            background: #3c4043;
-            border-radius: 4px;
-        }
-
-        .message-item {
-            padding: 16px 20px;
-            border-bottom: 1px solid #3c4043;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            animation: slideIn 0.3s ease;
-        }
-
-        .message-item:hover {
-            background: #2d2e31;
-        }
-
-        .message-item.active {
-            background: #2d2e31;
-        }
-
-        .message-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-
-        .message-from {
-            font-size: 14px;
-            font-weight: 500;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .message-subject {
-            font-size: 13px;
-            color: #bdc1c6;
-            margin-bottom: 6px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .message-date {
-            font-size: 12px;
-            color: #9aa0a6;
-        }
-
-        .empty-state {
-            padding: 60px 20px;
-            text-align: center;
-            color: #9aa0a6;
-        }
-
-        .empty-state svg {
-            width: 60px;
-            height: 60px;
-            fill: #3c4043;
-            margin-bottom: 16px;
-        }
-
-        .message-detail {
-            background: #292a2d;
-            border: 1px solid #3c4043;
-            border-radius: 12px;
-            height: fit-content;
-            min-height: 600px;
-            animation: slideLeft 0.4s ease;
-        }
-
-        .detail-header {
-            padding: 24px;
-            border-bottom: 1px solid #3c4043;
-        }
-
-        .detail-subject {
-            font-size: 24px;
-            font-weight: 500;
-            margin-bottom: 16px;
-            color: #fff;
-        }
-
-        .detail-info {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .info-row {
-            display: flex;
-            gap: 12px;
-        }
-
-        .info-label {
-            color: #9aa0a6;
-            min-width: 60px;
-        }
-
-        .detail-body {
-            padding: 24px;
-            line-height: 1.6;
-            overflow-y: auto;
-            max-height: 500px;
-        }
-
-        .detail-body iframe {
-            width: 100%;
-            min-height: 400px;
-            border: none;
-            border-radius: 8px;
-            background: white;
-        }
-
-        .placeholder-detail {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 600px;
-            color: #9aa0a6;
-        }
-
-        .placeholder-detail svg {
-            width: 80px;
-            height: 80px;
-            fill: #3c4043;
-            margin-bottom: 20px;
-        }
-
-        .loading {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideDown {
-            from { 
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideUp {
-            from { 
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            from { 
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideLeft {
-            from { 
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .main-content.active {
-                grid-template-columns: 1fr;
-            }
-
-            .message-detail {
-                display: none;
-            }
-
-            .message-detail.mobile-show {
-                display: block;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .container {
-                padding: 16px;
-            }
-
-            .header {
-                margin-bottom: 24px;
-            }
-
-            h1 {
-                font-size: 22px;
-            }
-
-            .welcome-screen h2 {
-                font-size: 24px;
-            }
-
-            .sidebar {
-                width: 100%;
-            }
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tabel Periodik Unsur – Interaktif</title>
+<style>
+  :root{
+    --bg:#0b1020;
+    --ink:#e8edf7;
+    --muted:#9fb0d0;
+    --card:#151b33;
+    --accent:#6ac6ff;
+    --grid-gap:6px;
+    --radius:14px;
+
+    /* warna kategori */
+    --alkali:#ff6b6b;
+    --alkaline:#ffb86b;
+    --lanth:#ffda6b;
+    --act:#ffd0a6;
+    --transition:#69d3b5;
+    --post:#5ec7ff;
+    --metalloid:#b388ff;
+    --nonmetal:#6de06d;
+    --halogen:#f779d0;
+    --noble:#8ad1ff;
+    --unknown:#8892a7;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+    background: radial-gradient(1200px 800px at 20% -10%, #1b2444 0%, #0b1020 55%) fixed, var(--bg);
+    color:var(--ink);
+  }
+  header{
+    max-width:1200px; margin:24px auto 8px; padding:0 16px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  h1{font-size:clamp(1.2rem,2.2vw,1.75rem); margin:0; letter-spacing:.3px}
+  .toolbar{display:flex; gap:8px; flex-wrap:wrap}
+  .chip{
+    display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; font-size:.85rem;
+    background:rgba(255,255,255,.04); color:var(--muted); border:1px solid rgba(255,255,255,.06);
+  }
+  .dot{width:12px; height:12px; border-radius:50%}
+  .legend{max-width:1200px; margin:0 auto; padding:0 16px 10px; display:flex; gap:8px; flex-wrap:wrap}
+  .wrap{
+    max-width:1200px; margin:0 auto; padding:8px 16px 40px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(18, minmax(40px, 1fr));
+    gap:var(--grid-gap);
+  }
+  .cell{
+    position:relative; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:10px; padding:8px; min-height:64px; cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    user-select:none; -webkit-user-select:none;
+  }
+  .cell:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,.35); border-color: rgba(255,255,255,.18); }
+  .cell .num{position:absolute; top:6px; left:8px; font-size:.75rem; color:var(--muted)}
+  .cell .sym{display:block; font-weight:800; font-size:1.1rem; line-height:1; margin-top:10px}
+  .cell .name{font-size:.7rem; color:var(--muted); margin-top:4px; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .cell .grp{font-size:.6rem; opacity:.7; text-align: right; margin-top: 2px;}
+  .cell[data-cat="alkali"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--alkali) 18%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="alkaline"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--alkaline) 22%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="transition"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--transition) 16%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="post"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--post) 18%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="metalloid"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--metalloid) 18%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="nonmetal"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--nonmetal) 16%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="halogen"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--halogen) 18%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="noble"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--noble) 18%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="lanth"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--lanth) 18%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="act"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--act) 18%, transparent), rgba(255,255,255,.02)); }
+  .cell[data-cat="unknown"]{ background: linear-gradient(180deg, color-mix(in srgb, var(--unknown) 18%, transparent), rgba(255,255,255,.02)); }
+
+  /* placeholder kosong */
+  .empty{opacity:.15; border-style:dashed; pointer-events:none}
+
+  /* subgrid lantanida & aktinida label */
+  .row-label{
+    grid-column: 1 / span 3; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; color:var(--muted); font-size:.85rem;
+  }
+  .subgrid{ grid-column: 4 / span 15; display:grid; grid-template-columns: repeat(15, minmax(40px, 1fr)); gap:var(--grid-gap); }
+
+  /* Modal */
+  dialog{
+    border:none; border-radius:var(--radius); padding:0; width:min(680px, 92vw); background:linear-gradient(180deg, #101735, #0c1330);
+    color:var(--ink); box-shadow:0 12px 40px rgba(0,0,0,.55); overflow:hidden;
+  }
+  dialog::backdrop{ background: rgba(4,6,14,.6); backdrop-filter: blur(2px); }
+  .modal-head{ display:flex; justify-content:space-between; align-items:center; padding:16px 18px; border-bottom:1px solid rgba(255,255,255,.08);}
+  .tag{font-size:.8rem; padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.12); opacity:.9}
+  .modal-body{ display:grid; grid-template-columns:120px 1fr; gap:16px; padding:16px 18px 20px;}
+  .big-sym{ font-size:2.8rem; font-weight:800; line-height:1; }
+  .big-num{ color:var(--muted); margin-top:6px; font-size:.9rem }
+  .meta{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .kv{ background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:10px 12px; }
+  .k{ color:var(--muted); font-size:.75rem }
+  .v{ font-weight:600; margin-top:4px }
+  .close-btn{
+    background:transparent; color:var(--ink); border:1px solid rgba(255,255,255,.2); padding:8px 12px; border-radius:10px; cursor:pointer;
+  }
+  .searchbar{
+    display:flex; gap:8px; align-items:center;
+    background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+    padding:8px 12px; border-radius:12px; min-width:280px;
+  }
+  .searchbar input{
+    background:transparent; border:none; color:var(--ink); outline:none; width:200px;
+  }
+  .hint{ color:var(--muted); font-size:.86rem; margin-top:6px }
+  @media (max-width:720px){
+    .modal-body{ grid-template-columns:1fr; }
+  }
+  footer {
+    padding: 24px 16px;
+    margin-top: 32px;
+    text-align: center;
+    font-size: .85rem;
+    color: var(--muted);
+    opacity: .75;
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <svg viewBox="0 0 24 24">
-                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                </svg>
-            </div>
-            <h1>FadelSM TempMail</h1>
-        </div>
-
-        <div class="welcome-screen" id="welcomeScreen">
-            <div class="welcome-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                </svg>
-            </div>
-            <h2>Generate Temporary Email</h2>
-            <p>Create a disposable email address instantly to protect your privacy and avoid spam</p>
-            <button class="btn-primary" onclick="createEmail()" id="generateBtn">Generate Email</button>
-        </div>
-
-        <div class="main-content" id="mainContent">
-            <div class="sidebar">
-                <div class="card email-display">
-                    <div class="card-header">
-                        <span class="card-title">Your Temporary Email</span>
-                        <button class="icon-btn" onclick="createEmail()" id="refreshEmailBtn" title="Generate New Email">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="email-box">
-                        <span class="email-text" id="emailDisplay">Loading...</span>
-                        <button class="icon-btn" onclick="copyEmail()" id="copyBtn" title="Copy Email">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="inbox-header">
-                        <div class="inbox-title">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M19 3H4.99c-1.11 0-1.98.9-1.98 2L3 19c0 1.1.88 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.35 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/>
-                            </svg>
-                            <span>Inbox</span>
-                            <span class="count" id="messageCount">(0)</span>
-                        </div>
-                        <button class="icon-btn" onclick="fetchMessages()" id="refreshBtn" title="Refresh">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="message-list" id="messageList">
-                        <div class="empty-state">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                            </svg>
-                            <p>No messages yet</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="message-detail" id="messageDetail">
-                <div class="placeholder-detail">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 3H4.99c-1.11 0-1.98.9-1.98 2L3 19c0 1.1.88 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.35 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/>
-                    </svg>
-                    <p>Select a message to view</p>
-                </div>
-            </div>
-        </div>
+  <header>
+    <h1>🧪 Tabel Periodik Unsur – Interaktif</h1>
+    <div class="toolbar">
+      <div class="searchbar">
+        🔎 <input id="q" placeholder="Cari simbol / nama / nomor…" autocomplete="off" />
+      </div>
+      <div class="chip"><span class="dot" style="background:var(--nonmetal)"></span> Non-logam</div>
+      <div class="chip"><span class="dot" style="background:var(--metalloid)"></span> Metaloid</div>
+      <div class="chip"><span class="dot" style="background:var(--post)"></span> Logam pasca-transisi</div>
+      <div class="chip"><span class="dot" style="background:var(--transition)"></span> Logam transisi</div>
+      <div class="chip"><span class="dot" style="background:var(--alkali)"></span> Alkali</div>
+      <div class="chip"><span class="dot" style="background:var(--alkaline)"></span> Alkali tanah</div>
+      <div class="chip"><span class="dot" style="background:var(--halogen)"></span> Halogen</div>
+      <div class="chip"><span class="dot" style="background:var(--noble)"></span> Gas mulia</div>
+      <div class="chip"><span class="dot" style="background:var(--lanth)"></span> Lantanida</div>
+      <div class="chip"><span class="dot" style="background:var(--act)"></span> Aktinida</div>
     </div>
+  </header>
 
-    <script>
-        const API_BASE = 'https://api.mail.tm';
-        let currentEmail = '';
-        let currentToken = '';
-        let messages = [];
-        let autoRefreshInterval;
+  <div class="wrap">
+    <p class="hint">Klik unsur untuk melihat detail. Gunakan kolom pencarian untuk menyorot unsur tertentu.</p>
+    <!-- GRID UTAMA 18 KOLOM -->
+    <div id="grid" class="grid"></div>
 
-        function randomStr(len = 10) {
-            return Math.random().toString(36).substring(2, 2 + len);
-        }
+    <!-- Lantanida & Aktinida -->
+    <div style="height:16px"></div>
+    <div class="grid" style="grid-template-columns: repeat(18, minmax(40px, 1fr));">
+      <div class="row-label">Lantanida</div>
+      <div class="subgrid" id="lanthRow"></div>
+    </div>
+    <div class="grid" style="grid-template-columns: repeat(18, minmax(40px, 1fr)); margin-top:6px">
+      <div class="row-label">Aktinida</div>
+      <div class="subgrid" id="actRow"></div>
+    </div>
+  </div>
 
-        async function createEmail() {
-            const btn = document.getElementById('generateBtn');
-            const refreshBtn = document.getElementById('refreshEmailBtn');
-            
-            if (btn) btn.disabled = true;
-            if (refreshBtn) refreshBtn.disabled = true;
-            if (btn) btn.textContent = 'Generating...';
+  <!-- MODAL -->
+  <dialog id="modal">
+    <div class="modal-head">
+      <div style="display:flex; align-items:center; gap:10px">
+        <div id="mTitle" style="font-weight:700; font-size:1.1rem">Unsur</div>
+        <span id="mCat" class="tag">Kategori</span>
+      </div>
+      <button class="close-btn" id="closeBtn">Tutup</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="big-sym" id="mSym">H</div>
+        <div class="big-num" id="mNum">Nomor atom: 1</div>
+      </div>
+      <div class="meta" id="meta">
+        <!-- auto diisi -->
+      </div>
+    </div>
+  </dialog>
 
-            try {
-                const domainRes = await fetch(`${API_BASE}/domains`);
-                const domainData = await domainRes.json();
-                const domain = domainData['hydra:member'][0].domain;
+<script>
+/* ========= DATA RINGKAS UNSUR =========
+   Catatan: Kategori disederhanakan untuk pewarnaan.
+   Posisi (group, period) mengikuti layout umum:
+   - Period 1–7 di grid utama
+   - Lantanida (Ce–Lu) & Aktinida (Th–Lr) di baris terpisah
+*/
+const ELEMENTS = [
+  // no, sym, name, category, group, period, atomicMass (approx), notes
+  [1,"H","Hidrogen","nonmetal",1,1,1.008,"Gas paling ringan; sering digunakan pada penelitian dan industri."],
+  [2,"He","Helium","noble",18,1,4.003,"Gas mulia; dipakai untuk balon & pendinginan kriogenik."],
 
-                const address = `${randomStr(8)}@${domain}`;
-                const password = randomStr(12);
+  [3,"Li","Litium","alkali",1,2,6.94,"Baterai isi ulang, logam sangat reaktif."],
+  [4,"Be","Berilium","alkaline",2,2,9.012,"Ringan & kuat; paduan khusus."],
+  [5,"B","Boron","metalloid",13,2,10.81,"Metaloid; borosilikat (kaca tahan panas)."],
+  [6,"C","Karbon","nonmetal",14,2,12.011,"Dasar kimia organik; grafit & intan."],
+  [7,"N","Nitrogen","nonmetal",15,2,14.007,"78% udara; inert untuk industri."],
+  [8,"O","Oksigen","nonmetal",16,2,15.999,"Mendukung pembakaran & respirasi."],
+  [9,"F","Fluorin","halogen",17,2,18.998,"Sangat reaktif; fluoridasi gigi (senyawa)."],
+  [10,"Ne","Neon","noble",18,2,20.180,"Lampu neon; gas mulia."],
 
-                await fetch(`${API_BASE}/accounts`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ address, password })
-                });
+  [11,"Na","Natrium","alkali",1,3,22.990,"Garam dapur (NaCl); sangat reaktif sebagai logam."],
+  [12,"Mg","Magnesium","alkaline",2,3,24.305,"Paduan ringan; kembang api."],
+  [13,"Al","Aluminium","post",13,3,26.982,"Logam ringan; anti-korosi."],
+  [14,"Si","Silikon","metalloid",14,3,28.085,"Semikonduktor; chip elektronik."],
+  [15,"P","Fosfor","nonmetal",15,3,30.974,"Pupuk; bentuk merah & putih."],
+  [16,"S","Belerang","nonmetal",16,3,32.06,"Asam sulfat; vulkanik."],
+  [17,"Cl","Klorin","halogen",17,3,35.45,"Disinfektan; pemutih (senyawa)."],
+  [18,"Ar","Argon","noble",18,3,39.948,"Gas mulia; pengelasan."],
 
-                const tokenRes = await fetch(`${API_BASE}/token`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ address, password })
-                });
-                const tokenData = await tokenRes.json();
+  [19,"K","Kalium","alkali",1,4,39.098,"Nutrisi tanaman; sangat reaktif."],
+  [20,"Ca","Kalsium","alkaline",2,4,40.078,"Tulang (CaCO₃); semen."],
+  [21,"Sc","Skandium","transition",3,4,44.956,"Paduan aluminium kelas aero."],
+  [22,"Ti","Titanium","transition",4,4,47.867,"Kuat, ringan; implan & aero."],
+  [23,"V","Vanadium","transition",5,4,50.942,"Paduan baja."],
+  [24,"Cr","Kromium","transition",6,4,51.996,"Pelapisan anti-korosi."],
+  [25,"Mn","Mangan","transition",7,4,54.938,"Baja & baterai."],
+  [26,"Fe","Besi","transition",8,4,55.845,"Material struktur utama."],
+  [27,"Co","Kobalt","transition",9,4,58.933,"Baterai, superalloy."],
+  [28,"Ni","Nikel","transition",10,4,58.693,"Baja tahan karat, baterai."],
+  [29,"Cu","Tembaga","transition",11,4,63.546,"Kabel listrik, pipa."],
+  [30,"Zn","Seng","transition",12,4,65.38,"Galvanisasi; paduan kuningan."],
+  [31,"Ga","Galium","post",13,4,69.723,"LED (GaN, GaAs)."],
+  [32,"Ge","Germanium","metalloid",14,4,72.630,"Semikonduktor khusus."],
+  [33,"As","Arsen","metalloid",15,4,74.922,"Metaloid beracun; pestisida lama."],
+  [34,"Se","Selenium","nonmetal",16,4,78.971,"Fotokonduktor; sel surya tertentu."],
+  [35,"Br","Bromin","halogen",17,4,79.904,"Satu-satunya non-logam cair (dgn Hg logam cair)."],
+  [36,"Kr","Kripton","noble",18,4,83.798,"Lampu flash foto."],
 
-                currentEmail = address;
-                currentToken = tokenData.token;
-                messages = [];
+  [37,"Rb","Rubidium","alkali",1,5,85.468,"Jam atom, penelitian."],
+  [38,"Sr","Stronsium","alkaline",2,5,87.62,"Kembang api merah."],
+  [39,"Y","Itrium","transition",3,5,88.906,"Phosphor TV; superkonduktor YBCO."],
+  [40,"Zr","Zirkonium","transition",4,5,91.224,"Selubung reaktor nuklir."],
+  [41,"Nb","Niobium","transition",5,5,92.906,"Superkonduktor & paduan."],
+  [42,"Mo","Molibdenum","transition",6,5,95.95,"Paduan suhu tinggi."],
+  [43,"Tc","Teknesium","transition",7,5,98,"Radioaktif; imaging medis."],
+  [44,"Ru","Rutenium","transition",8,5,101.07,"Katalis & kontak listrik."],
+  [45,"Rh","Rodium","transition",9,5,102.91,"Katalis otomotif."],
+  [46,"Pd","Paladium","transition",10,5,106.42,"Katalis, elektronik."],
+  [47,"Ag","Perak","transition",11,5,107.87,"Konduktor terbaik; perhiasan."],
+  [48,"Cd","Kadmium","transition",12,5,112.41,"Aki NiCd; beracun."],
+  [49,"In","Indium","post",13,5,114.82,"ITO pada layar sentuh."],
+  [50,"Sn","Timah","post",14,5,118.71,"Solder, pelapisan kaleng."],
+  [51,"Sb","Antimon","metalloid",15,5,121.76,"Flame retardant (senyawa)."],
+  [52,"Te","Tellurium","metalloid",16,5,127.60,"Thermoelectric; paduan."],
+  [53,"I","Iodin","halogen",17,5,126.90,"Antiseptik; kelenjar tiroid."],
+  [54,"Xe","Xenon","noble",18,5,131.29,"Lampu kilat & anestesi."],
 
-                document.getElementById('emailDisplay').textContent = address;
-                document.getElementById('welcomeScreen').style.display = 'none';
-                document.getElementById('mainContent').classList.add('active');
+  [55,"Cs","Sesium","alkali",1,6,132.91,"Jam atom; sangat reaktif."],
+  [56,"Ba","Barium","alkaline",2,6,137.33,"Kontras X-ray (BaSO₄)."],
+  [57,"La","Lantanum","lanth",3,6,138.91,"Awal seri lantanida."],
+  [72,"Hf","Hafnium","transition",4,6,178.49,"Turbin & reaktor."],
+  [73,"Ta","Tantalum","transition",5,6,180.95,"Kapasitor & paduan."],
+  [74,"W","Tungsten","transition",6,6,183.84,"Titik leleh tertinggi logam."],
+  [75,"Re","Renium","transition",7,6,186.21,"Katalis; superalloy."],
+  [76,"Os","Osmium","transition",8,6,190.23,"Sangat padat; ujung pena."],
+  [77,"Ir","Iridium","transition",9,6,192.22,"Sangat tahan korosi."],
+  [78,"Pt","Platina","transition",10,6,195.08,"Katalis, perhiasan."],
+  [79,"Au","Emas","transition",11,6,196.97,"Perhiasan, investasi."],
+  [80,"Hg","Raksa","transition",12,6,200.59,"Logam cair; termometer lama."],
+  [81,"Tl","Talium","post",13,6,204.38,"Beracun; sensor kaca."],
+  [82,"Pb","Timbal","post",14,6,207.2,"Aki timbal; beracun."],
+  [83,"Bi","Bismut","post",15,6,208.98,"Obat lambung (seny.)."],
+  [84,"Po","Polonium","post",16,6,209,"Radioaktif; langka."],
+  [85,"At","Astatin","halogen",17,6,210,"Sangat langka; radioaktif."],
+  [86,"Rn","Radon","noble",18,6,222,"Gas radioaktif alami."],
 
-                startAutoRefresh();
-                fetchMessages();
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to create email. Please try again.');
-            }
+  [87,"Fr","Fransium","alkali",1,7,223,"Sangat langka; radioaktif."],
+  [88,"Ra","Radium","alkaline",2,7,226,"Sejarah radioluminesen; radioaktif."],
+  [89,"Ac","Aktinium","act",3,7,227,"Awal seri aktinida."],
+  [104,"Rf","Rutherfordium","transition",4,7,267,"Buatan; radioaktif."],
+  [105,"Db","Dubnium","transition",5,7,268,"Buatan; radioaktif."],
+  [106,"Sg","Seaborgium","transition",6,7,269,"Buatan; radioaktif."],
+  [107,"Bh","Bohrium","transition",7,7,270,"Buatan; radioaktif."],
+  [108,"Hs","Hassium","transition",8,7,277,"Buatan; radioaktif."],
+  [109,"Mt","Meitnerium","transition",9,7,278,"Buatan; radioaktif."],
+  [110,"Ds","Darmstadtium","transition",10,7,281,"Buatan; radioaktif."],
+  [111,"Rg","Roentgenium","transition",11,7,282,"Buatan; radioaktif."],
+  [112,"Cn","Copernicium","transition",12,7,285,"Buatan; radioaktif."],
+  [113,"Nh","Nihonium","post",13,7,286,"Buatan; radioaktif."],
+  [114,"Fl","Flerovium","post",14,7,289,"Buatan; radioaktif."],
+  [115,"Mc","Moscovium","post",15,7,290,"Buatan; radioaktif."],
+  [116,"Lv","Livermorium","post",16,7,293,"Buatan; radioaktif."],
+  [117,"Ts","Tennessine","halogen",17,7,294,"Buatan; radioaktif."],
+  [118,"Og","Oganesson","noble",18,7,294,"Gas mulia super berat (hipotetis)."],
 
-            if (btn) {
-                btn.disabled = false;
-                btn.textContent = 'Generate Email';
-            }
-            if (refreshBtn) refreshBtn.disabled = false;
-        }
+  // LANTANIDA (baris terpisah; kolom 4..18) – Ce..Lu
+  [58,"Ce","Serium","lanth",4,8,140.12,"Katalis otomotif; batu api."],
+  [59,"Pr","Praseodimium","lanth",5,8,140.91,"Magnet, laser."],
+  [60,"Nd","Neodimium","lanth",6,8,144.24,"Magnet kuat (NdFeB)."],
+  [61,"Pm","Prometium","lanth",7,8,145,"Radioaktif; sangat langka."],
+  [62,"Sm","Samarium","lanth",8,8,150.36,"Magnet SmCo; reaktor."],
+  [63,"Eu","Europium","lanth",9,8,151.96,"Phosphor merah layar."],
+  [64,"Gd","Gadolinium","lanth",10,8,157.25,"MRI kontras; neutron capture."],
+  [65,"Tb","Terbium","lanth",11,8,158.93,"Phosphor hijau; speaker."],
+  [66,"Dy","Disprosium","lanth",12,8,162.50,"Magnet suhu tinggi."],
+  [67,"Ho","Holmium","lanth",13,8,164.93,"Medis & magnetik."],
+  [68,"Er","Erbium","lanth",14,8,167.26,"Amplifier serat optik."],
+  [69,"Tm","Tuliu","lanth",15,8,168.93,"Laser; langka."],
+  [70,"Yb","Iterbium","lanth",16,8,173.05,"Serat optik; penelitian."],
+  [71,"Lu","Lutesium","lanth",17,8,174.97,"Katalis & PET scan."],
 
-        async function fetchMessages() {
-            if (!currentToken) return;
+  // AKTINIDA (baris terpisah; kolom 4..18) – Th..Lr
+  [90,"Th","Torium","act",4,9,232.04,"Bahan bakar nuklir alternatif."],
+  [91,"Pa","Protaktinium","act",5,9,231.04,"Sangat langka; penelitian."],
+  [92,"U","Uranium","act",6,9,238.03,"Bahan bakar nuklir; radiologi."],
+  [93,"Np","Neptunium","act",7,9,237,"Produk reaktor; penelitian."],
+  [94,"Pu","Plutonium","act",8,9,244,"Bahan bakar/tritium; radioaktif."],
+  [95,"Am","Amerisium","act",9,9,243,"Detektor asap (Am-241)."],
+  [96,"Cm","Kurium","act",10,9,247,"Sumber alfa; penelitian."],
+  [97,"Bk","Berkelium","act",11,9,247,"Sintetik; penelitian."],
+  [98,"Cf","Kalifornium","act",12,9,251,"Sumber neutron industri."],
+  [99,"Es","Einsteinium","act",13,9,252,"Sintetik; penelitian."],
+  [100,"Fm","Fermium","act",14,9,257,"Sintetik; radioaktif."],
+  [101,"Md","Mendelevium","act",15,9,258,"Sintetik; penelitian."],
+  [102,"No","Nobelium","act",16,9,259,"Sintetik; penelitian."],
+  [103,"Lr","Lawrensium","act",17,9,266,"Sintetik; penelitian."],
+];
 
-            const refreshBtn = document.getElementById('refreshBtn');
-            if (refreshBtn) {
-                refreshBtn.disabled = true;
-                refreshBtn.querySelector('svg').classList.add('loading');
-            }
+// Buat peta penempatan grid utama (period 1–7)
+function buildMainGridMap(){
+  const map = [];
+  // Helper: taruh placeholder empty
+  const empty = (col,row) => map.push({type:'empty', col, row});
 
-            try {
-                const res = await fetch(`${API_BASE}/messages`, {
-                    headers: { Authorization: `Bearer ${currentToken}` }
-                });
-                const data = await res.json();
-                messages = data['hydra:member'] || [];
+  // Period 1
+  map.push({no:1, col:1, row:1});
+  map.push({no:2, col:18, row:1});
 
-                renderMessages();
-            } catch (error) {
-                console.error('Error:', error);
-            }
+  // Period 2
+  map.push({no:3, col:1, row:2});
+  map.push({no:4, col:2, row:2});
+  map.push({no:5, col:13, row:2});
+  map.push({no:6, col:14, row:2});
+  map.push({no:7, col:15, row:2});
+  map.push({no:8, col:16, row:2});
+  map.push({no:9, col:17, row:2});
+  map.push({no:10, col:18, row:2});
 
-            if (refreshBtn) {
-                refreshBtn.disabled = false;
-                refreshBtn.querySelector('svg').classList.remove('loading');
-            }
-        }
+  // Period 3
+  map.push({no:11, col:1, row:3});
+  map.push({no:12, col:2, row:3});
+  map.push({no:13, col:13, row:3});
+  map.push({no:14, col:14, row:3});
+  map.push({no:15, col:15, row:3});
+  map.push({no:16, col:16, row:3});
+  map.push({no:17, col:17, row:3});
+  map.push({no:18, col:18, row:3});
 
-        function renderMessages() {
-            const messageList = document.getElementById('messageList');
-            const messageCount = document.getElementById('messageCount');
+  // Period 4 (Sc–Zn mengisi 3..12)
+  const p4 = [19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36];
+  const cols4 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+  p4.forEach((no,i)=> map.push({no, col:cols4[i], row:4}));
 
-            messageCount.textContent = `(${messages.length})`;
+  // Period 5
+  const p5 = [37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54];
+  p5.forEach((no,i)=> map.push({no, col:cols4[i], row:5}));
 
-            if (messages.length === 0) {
-                messageList.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        </svg>
-                        <p>No messages yet</p>
-                    </div>
-                `;
-                return;
-            }
+  // Period 6 (La ditempatkan di kolom 3; Ce–Lu turun ke baris lantanida)
+  const p6 = [55,56,57,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86];
+  p6.forEach((no,i)=> map.push({no, col:cols4[i], row:6}));
 
-            messageList.innerHTML = messages.map(msg => `
-                <div class="message-item" onclick="viewMessage('${msg.id}')">
-                    <div class="message-header">
-                        <span class="message-from">${msg.from?.address || 'Unknown'}</span>
-                        <button class="icon-btn" onclick="event.stopPropagation(); deleteMessage('${msg.id}')" title="Delete">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                            </svg>
-                        </button>
-                    </div>
-         
+  // Period 7 (Ac di kolom 3; Th–Lr di baris aktinida)
+  const p7 = [87,88,89,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118];
+  p7.forEach((no,i)=> map.push({no, col:cols4[i], row:7}));
+
+  return map;
+}
+
+const GRID_M
